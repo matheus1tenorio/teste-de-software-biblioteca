@@ -1,4 +1,4 @@
-from config import get_connection
+from cliente_service.config import get_connection
 
 
 def get_all_clientes():
