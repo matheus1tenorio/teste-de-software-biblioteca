@@ -1,0 +1,97 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: biblioteca-mysql
+    restart: always
+    mem_limit: 700m
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: biblioteca
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    networks:
+      - biblioteca-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  cliente-service:
+    build: ./cliente-service
+    mem_limit: 256m
+    cpus: "0.50"
+    ports:
+      - "5001:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+    networks:
+      - biblioteca-network
+
+  livro-service:
+    build: ./livro-service
+    mem_limit: 256m
+    cpus: "0.50"
+    ports:
+      - "5002:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+    networks:
+      - biblioteca-network
+
+  emprestimo-service:
+    build: ./emprestimo-service
+    mem_limit: 256m
+    cpus: "0.50"
+    ports:
+      - "5003:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+      LIVRO_SERVICE_URL: http://livro-service:5000
+    networks:
+      - biblioteca-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: biblioteca-frontend
+    mem_limit: 128m
+    cpus: "0.25"
+    ports:
+      - "8080:80"
+    depends_on:
+      - cliente-service
+      - livro-service
+      - emprestimo-service
+    networks:
+      - biblioteca-network
+
+networks:
+  biblioteca-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
