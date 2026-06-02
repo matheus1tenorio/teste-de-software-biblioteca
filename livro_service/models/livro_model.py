@@ -1,4 +1,4 @@
-from config import get_connection
+from livro_service.config import get_connection
 
 
 def get_all_livros():
