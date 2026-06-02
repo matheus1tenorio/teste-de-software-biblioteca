@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from controllers.emprestimo_controller import (
+from src.emprestimo_service.controllers.emprestimo_controller import (
     listar_emprestimos,
     criar_emprestimo,
     devolver_livro,
