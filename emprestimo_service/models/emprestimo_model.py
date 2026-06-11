@@ -1,5 +1,5 @@
 import datetime
-from src.emprestimo_service.config import get_connection
+from emprestimo_service.config import get_connection
 
 
 def _serializar(row):

@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.cliente_service.controllers.cliente_controller import (
+from cliente_service.controllers.cliente_controller import (
     listar_clientes,
     buscar_cliente,
     adicionar_cliente,
@@ -16,7 +16,7 @@ def test_listar_clientes():
     ]
 
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_all_clientes",
+        "cliente_service.controllers.cliente_controller.get_all_clientes",
         return_value=clientes
     ):
         result = listar_clientes()
@@ -31,7 +31,7 @@ def test_buscar_cliente():
     }
 
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_cliente_by_id",
+        "cliente_service.controllers.cliente_controller.get_cliente_by_id",
         return_value=cliente
     ):
         result = buscar_cliente(1)
@@ -47,7 +47,7 @@ def test_adicionar_cliente():
     }
 
     with patch(
-        "src.cliente_service.controllers.cliente_controller.create_cliente"
+        "cliente_service.controllers.cliente_controller.create_cliente"
     ) as mock_create:
 
         result = adicionar_cliente(dados)
@@ -86,10 +86,10 @@ def test_editar_cliente():
     }
 
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_cliente_by_id",
+        "cliente_service.controllers.cliente_controller.get_cliente_by_id",
         return_value={"id": 1}
     ), patch(
-        "src.cliente_service.controllers.cliente_controller.update_cliente"
+        "cliente_service.controllers.cliente_controller.update_cliente"
     ) as mock_update:
 
         result = editar_cliente(1, dados)
@@ -115,7 +115,7 @@ def test_editar_cliente_nao_encontrado():
     }
 
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_cliente_by_id",
+        "cliente_service.controllers.cliente_controller.get_cliente_by_id",
         return_value=None
     ):
         result = editar_cliente(999, dados)
@@ -128,10 +128,10 @@ def test_editar_cliente_nao_encontrado():
 
 def test_remover_cliente():
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_cliente_by_id",
+        "cliente_service.controllers.cliente_controller.get_cliente_by_id",
         return_value={"id": 1}
     ), patch(
-        "src.cliente_service.controllers.cliente_controller.delete_cliente"
+        "cliente_service.controllers.cliente_controller.delete_cliente"
     ) as mock_delete:
 
         result = remover_cliente(1)
@@ -146,7 +146,7 @@ def test_remover_cliente():
 
 def test_remover_cliente_nao_encontrado():
     with patch(
-        "src.cliente_service.controllers.cliente_controller.get_cliente_by_id",
+        "cliente_service.controllers.cliente_controller.get_cliente_by_id",
         return_value=None
     ):
         result = remover_cliente(999)

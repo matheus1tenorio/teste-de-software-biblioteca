@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.livro_service.controllers.livro_controller import (
+from livro_service.controllers.livro_controller import (
     listar_livros,
     buscar_livro,
     criar_livro,
@@ -29,7 +29,7 @@ def test_listar_livros():
     ]
 
     with patch(
-        "src.livro_service.controllers.livro_controller.get_all_livros",
+        "livro_service.controllers.livro_controller.get_all_livros",
         return_value=livros
     ):
         result = listar_livros()
@@ -47,7 +47,7 @@ def test_buscar_livro():
     }
 
     with patch(
-        "src.livro_service.controllers.livro_controller.get_livro_by_id",
+        "livro_service.controllers.livro_controller.get_livro_by_id",
         return_value=livro
     ):
         result = buscar_livro(1)
@@ -63,7 +63,7 @@ def test_criar_livro():
     }
 
     with patch(
-        "src.livro_service.controllers.livro_controller.create_livro"
+        "livro_service.controllers.livro_controller.create_livro"
     ) as mock_create:
 
         result = criar_livro(dados)
@@ -102,10 +102,10 @@ def test_editar_livro():
     }
 
     with patch(
-        "src.livro_service.controllers.livro_controller.get_livro_by_id",
+        "livro_service.controllers.livro_controller.get_livro_by_id",
         return_value={"id": 1}
     ), patch(
-        "src.livro_service.controllers.livro_controller.update_livro"
+        "livro_service.controllers.livro_controller.update_livro"
     ) as mock_update:
 
         result = editar_livro(1, dados)
@@ -130,7 +130,7 @@ def test_editar_livro_nao_encontrado():
     }
 
     with patch(
-        "src.livro_service.controllers.livro_controller.get_livro_by_id",
+        "livro_service.controllers.livro_controller.get_livro_by_id",
         return_value=None
     ):
         result = editar_livro(999, dados)
@@ -143,7 +143,7 @@ def test_editar_livro_nao_encontrado():
 
 def test_alterar_status():
     with patch(
-        "src.livro_service.controllers.livro_controller.update_disponibilidade"
+        "livro_service.controllers.livro_controller.update_disponibilidade"
     ) as mock_update:
 
         result = alterar_status(1, False)
@@ -155,10 +155,10 @@ def test_alterar_status():
 
 def test_remover_livro():
     with patch(
-        "src.livro_service.controllers.livro_controller.get_livro_by_id",
+        "livro_service.controllers.livro_controller.get_livro_by_id",
         return_value={"id": 1}
     ), patch(
-        "src.livro_service.controllers.livro_controller.delete_livro"
+        "livro_service.controllers.livro_controller.delete_livro"
     ) as mock_delete:
 
         result = remover_livro(1)
@@ -173,7 +173,7 @@ def test_remover_livro():
 
 def test_remover_livro_nao_encontrado():
     with patch(
-        "src.livro_service.controllers.livro_controller.get_livro_by_id",
+        "livro_service.controllers.livro_controller.get_livro_by_id",
         return_value=None
     ):
         result = remover_livro(999)

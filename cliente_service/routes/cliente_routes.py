@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from src.cliente_service.controllers.cliente_controller import (
+from cliente_service.controllers.cliente_controller import (
     listar_clientes,
     buscar_cliente,
     adicionar_cliente,

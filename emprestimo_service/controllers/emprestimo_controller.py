@@ -1,6 +1,6 @@
 import os
 import requests
-from src.emprestimo_service.models.emprestimo_model import (
+from emprestimo_service.models.emprestimo_model import (
     get_all_emprestimos,
     get_emprestimo_by_id,
     create_emprestimo,

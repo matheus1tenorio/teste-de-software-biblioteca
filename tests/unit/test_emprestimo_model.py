@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from src.emprestimo_service.models.emprestimo_model import (
+from emprestimo_service.models.emprestimo_model import (
     get_all_emprestimos,
     get_emprestimo_by_id,
     create_emprestimo,
@@ -37,7 +37,7 @@ def test_get_all_emprestimos():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         result = get_all_emprestimos()
@@ -65,7 +65,7 @@ def test_get_emprestimo_by_id():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         result = get_emprestimo_by_id(1)
@@ -89,7 +89,7 @@ def test_create_emprestimo():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         create_emprestimo(
@@ -117,7 +117,7 @@ def test_finalizar_emprestimo():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         finalizar_emprestimo(
@@ -143,7 +143,7 @@ def test_delete_emprestimo():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         delete_emprestimo(2)
@@ -165,7 +165,7 @@ def test_get_emprestimo_by_id_none():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.emprestimo_service.models.emprestimo_model.get_connection",
+        "emprestimo_service.models.emprestimo_model.get_connection",
         return_value=mock_conn
     ):
         result = get_emprestimo_by_id(999)

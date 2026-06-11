@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from src.livro_service.models.livro_model import (
+from livro_service.models.livro_model import (
     get_all_livros,
     get_livro_by_id,
     create_livro,
@@ -34,7 +34,7 @@ def test_get_all_livros():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         result = get_all_livros()
@@ -67,7 +67,7 @@ def test_get_livro_by_id():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         result = get_livro_by_id(1)
@@ -95,7 +95,7 @@ def test_create_livro():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         create_livro(
@@ -125,7 +125,7 @@ def test_update_livro():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         update_livro(
@@ -156,7 +156,7 @@ def test_update_disponibilidade():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         update_disponibilidade(1, False)
@@ -180,7 +180,7 @@ def test_delete_livro():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         delete_livro(2)
@@ -202,7 +202,7 @@ def test_get_livro_by_id_none():
     mock_conn.cursor.return_value = mock_cursor
 
     with patch(
-        "src.livro_service.models.livro_model.get_connection",
+        "livro_service.models.livro_model.get_connection",
         return_value=mock_conn
     ):
         result = get_livro_by_id(999)

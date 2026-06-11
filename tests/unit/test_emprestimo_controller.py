@@ -1,6 +1,6 @@
 from unittest.mock import patch, MagicMock
 
-from src.emprestimo_service.controllers.emprestimo_controller import (
+from emprestimo_service.controllers.emprestimo_controller import (
     listar_emprestimos,
     criar_emprestimo,
     devolver_livro,
@@ -22,7 +22,7 @@ def test_listar_emprestimos():
     ]
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_all_emprestimos",
+        "emprestimo_service.controllers.emprestimo_controller.get_all_emprestimos",
         return_value=emprestimos
     ):
         result = listar_emprestimos()
@@ -46,12 +46,12 @@ def test_criar_emprestimo():
     }
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.requests.get",
+        "emprestimo_service.controllers.emprestimo_controller.requests.get",
         return_value=mock_response
     ), patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.requests.put"
+        "emprestimo_service.controllers.emprestimo_controller.requests.put"
     ), patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.create_emprestimo"
+        "emprestimo_service.controllers.emprestimo_controller.create_emprestimo"
     ) as mock_create:
 
         result = criar_emprestimo(dados)
@@ -92,7 +92,7 @@ def test_criar_emprestimo_livro_nao_encontrado():
     mock_response.status_code = 404
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.requests.get",
+        "emprestimo_service.controllers.emprestimo_controller.requests.get",
         return_value=mock_response
     ):
         result = criar_emprestimo(dados)
@@ -119,7 +119,7 @@ def test_criar_emprestimo_livro_indisponivel():
     }
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.requests.get",
+        "emprestimo_service.controllers.emprestimo_controller.requests.get",
         return_value=mock_response
     ):
         result = criar_emprestimo(dados)
@@ -138,12 +138,12 @@ def test_devolver_livro():
     }
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
         return_value=emprestimo
     ), patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.finalizar_emprestimo"
+        "emprestimo_service.controllers.emprestimo_controller.finalizar_emprestimo"
     ) as mock_finalizar, patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.requests.put"
+        "emprestimo_service.controllers.emprestimo_controller.requests.put"
     ):
 
         result = devolver_livro(
@@ -173,7 +173,7 @@ def test_devolver_livro_sem_data():
 
 def test_devolver_livro_nao_encontrado():
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
         return_value=None
     ):
         result = devolver_livro(
@@ -195,7 +195,7 @@ def test_devolver_livro_ja_devolvido():
     }
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
         return_value=emprestimo
     ):
         result = devolver_livro(
@@ -217,10 +217,10 @@ def test_remover_emprestimo():
     }
 
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
         return_value=emprestimo
     ), patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.delete_emprestimo"
+        "emprestimo_service.controllers.emprestimo_controller.delete_emprestimo"
     ) as mock_delete:
 
         result = remover_emprestimo(1)
@@ -235,7 +235,7 @@ def test_remover_emprestimo():
 
 def test_remover_emprestimo_nao_encontrado():
     with patch(
-        "src.emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
         return_value=None
     ):
         result = remover_emprestimo(999)
