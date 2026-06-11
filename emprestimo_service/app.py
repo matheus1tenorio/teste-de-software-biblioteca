@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from emprestimo_service.routes.emprestimo_routes import emprestimo_bp
+from routes.emprestimo_routes import emprestimo_bp
 
 app = Flask(__name__)
 CORS(app)

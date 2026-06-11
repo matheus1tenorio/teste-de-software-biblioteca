@@ -1,4 +1,4 @@
-from livro_service.models.livro_model import (
+from models.livro_model import (
     get_all_livros,
     get_livro_by_id,
     create_livro,

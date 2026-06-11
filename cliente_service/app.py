@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from cliente_service.routes.cliente_routes import cliente_bp
+from routes.cliente_routes import cliente_bp
 
 app = Flask(__name__)
 CORS(app)

@@ -1,4 +1,4 @@
-from cliente_service.models.cliente_model import (
+from models.cliente_model import (
     get_all_clientes,
     get_cliente_by_id,
     create_cliente,

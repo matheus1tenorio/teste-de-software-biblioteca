@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from livro_service.controllers.livro_controller import (
+from controllers.livro_controller import (
     listar_livros,
     buscar_livro,
     criar_livro,
