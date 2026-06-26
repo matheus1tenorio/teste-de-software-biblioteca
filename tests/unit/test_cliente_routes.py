@@ -120,6 +120,3 @@ def test_delete_cliente(mock_remover, client):
     assert response.get_json() == {
         "mensagem": "Cliente removido"
     }
-
-
-
