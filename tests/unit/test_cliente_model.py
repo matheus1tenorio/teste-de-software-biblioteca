@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import MagicMock, patch
 
 from cliente_service.models.cliente_model import (
@@ -121,3 +122,134 @@ def test_get_cliente_by_id_none():
         result = get_cliente_by_id(999)
 
     assert result is None
+
+
+# Testes de falha — simulam exceções no sistema
+
+def test_get_all_clientes_falha_na_conexao():
+
+    with patch(
+
+        "cliente_service.models.cliente_model.get_connection",
+
+        side_effect=Exception("Não foi possível conectar ao banco")
+
+    ):
+
+        with pytest.raises(Exception, match="Não foi possível conectar ao banco"):
+
+            get_all_clientes()
+
+
+def test_get_all_clientes_falha_no_execute():
+
+    mock_conn = MagicMock()
+
+    mock_cursor = MagicMock()
+
+    mock_cursor.execute.side_effect = Exception("Tabela 'cliente' não encontrada")
+
+    mock_conn.cursor.return_value = mock_cursor
+
+
+    with patch("cliente_service.models.cliente_model.get_connection", return_value=mock_conn):
+
+        with pytest.raises(Exception, match="Tabela 'cliente' não encontrada"):
+
+            get_all_clientes()
+
+
+def test_get_cliente_by_id_falha_na_conexao():
+
+    with patch(
+
+        "cliente_service.models.cliente_model.get_connection",
+
+        side_effect=Exception("Pool de conexões esgotado")
+
+    ):
+
+        with pytest.raises(Exception, match="Pool de conexões esgotado"):
+
+            get_cliente_by_id(1)
+
+
+def test_create_cliente_falha_na_conexao():
+
+    with patch(
+
+        "cliente_service.models.cliente_model.get_connection",
+
+        side_effect=Exception("Banco de dados indisponível")
+
+    ):
+
+        with pytest.raises(Exception, match="Banco de dados indisponível"):
+
+            create_cliente("Matheus", "matheus@email.com", "2024001")
+
+
+def test_create_cliente_falha_no_commit():
+
+    mock_conn = MagicMock()
+
+    mock_cursor = MagicMock()
+
+    mock_conn.cursor.return_value = mock_cursor
+
+    mock_conn.commit.side_effect = Exception("Transação abortada por deadlock")
+
+
+    with patch("cliente_service.models.cliente_model.get_connection", return_value=mock_conn):
+
+        with pytest.raises(Exception, match="Transação abortada por deadlock"):
+
+            create_cliente("Matheus", "matheus@email.com", "2024001")
+
+
+def test_update_cliente_falha_na_conexao():
+
+    with patch(
+
+        "cliente_service.models.cliente_model.get_connection",
+
+        side_effect=Exception("Credenciais de banco expiradas")
+
+    ):
+
+        with pytest.raises(Exception, match="Credenciais de banco expiradas"):
+
+            update_cliente(1, "Matheus", "matheus@email.com", "2024002")
+
+
+def test_update_cliente_falha_no_execute():
+
+    mock_conn = MagicMock()
+
+    mock_cursor = MagicMock()
+
+    mock_cursor.execute.side_effect = Exception("Coluna 'matricula' não existe")
+
+    mock_conn.cursor.return_value = mock_cursor
+
+
+    with patch("cliente_service.models.cliente_model.get_connection", return_value=mock_conn):
+
+        with pytest.raises(Exception, match="Coluna 'matricula' não existe"):
+
+            update_cliente(1, "Matheus", "matheus@email.com", "2024002")
+
+
+def test_delete_cliente_falha_na_conexao():
+
+    with patch(
+
+        "cliente_service.models.cliente_model.get_connection",
+
+        side_effect=Exception("Banco fora do ar")
+
+    ):
+
+        with pytest.raises(Exception, match="Banco fora do ar"):
+
+            delete_cliente(2)
