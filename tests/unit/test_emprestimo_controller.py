@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch, MagicMock
 
 from emprestimo_service.controllers.emprestimo_controller import (
@@ -244,3 +245,108 @@ def test_remover_emprestimo_nao_encontrado():
         {"erro": "Empréstimo não encontrado"},
         404
     )
+
+
+# Testes de falha 
+ 
+def test_listar_emprestimos_falha_no_model():
+
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.get_all_emprestimos",
+        side_effect=Exception("Erro de conexão com o banco")
+    ):
+        with pytest.raises(Exception, match="Erro de conexão com o banco"):
+            listar_emprestimos()
+ 
+ 
+def test_criar_emprestimo_falha_ao_consultar():
+
+    import requests as req
+ 
+    dados = {
+        "cliente_id": 1,
+        "livro_id": 1,
+        "data_emprestimo": "2026-06-01"
+    }
+ 
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.requests.get",
+        side_effect=req.exceptions.RequestException("erro")
+    ):
+        result = criar_emprestimo(dados)
+ 
+    assert result[1] == 500
+    assert "Erro ao verificar disponibilidade do livro" in result[0]["erro"]
+ 
+ 
+def test_criar_emprestimo_falha_no_model():
+
+    dados = {
+        "cliente_id": 999,
+        "livro_id": 1,
+        "data_emprestimo": "2026-06-01"
+    }
+ 
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"id": 1, "titulo": "O Hobbit", "disponivel": True}
+ 
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.requests.get",
+        return_value=mock_response
+    ), patch(
+        "emprestimo_service.controllers.emprestimo_controller.create_emprestimo",
+        side_effect=Exception("cliente_id inexistente")
+    ):
+        with pytest.raises(Exception, match="cliente_id inexistente"):
+            criar_emprestimo(dados)
+ 
+ 
+def test_devolver_livro_falha_ao_buscar_emprestimo():
+
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        side_effect=Exception("erro ao buscar empréstimo")
+    ):
+        with pytest.raises(Exception, match="erro ao buscar empréstimo"):
+            devolver_livro(1, {"data_devolucao": "2026-06-10"})
+ 
+ 
+def test_devolver_livro_falha_no_finalizar():
+
+    emprestimo = {"id": 1, "livro_id": 1, "data_devolucao": None}
+ 
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        return_value=emprestimo
+    ), patch(
+        "emprestimo_service.controllers.emprestimo_controller.finalizar_emprestimo",
+        side_effect=Exception("erro ao finalizar empréstimo")
+    ):
+        with pytest.raises(Exception, match="erro ao finalizar empréstimo"):
+            devolver_livro(1, {"data_devolucao": "2026-06-10"})
+ 
+ 
+def test_remover_emprestimo_falha_ao_buscar():
+
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        side_effect=Exception("Banco inacessível")
+    ):
+        with pytest.raises(Exception, match="Banco inacessível"):
+            remover_emprestimo(1)
+ 
+ 
+def test_remover_emprestimo_falha_no_delete():
+
+    emprestimo = {"id": 1, "livro_id": 1, "data_devolucao": "2026-06-10"}
+ 
+    with patch(
+        "emprestimo_service.controllers.emprestimo_controller.get_emprestimo_by_id",
+        return_value=emprestimo
+    ), patch(
+        "emprestimo_service.controllers.emprestimo_controller.delete_emprestimo",
+        side_effect=Exception("Erro ao deletar empréstimo no banco")
+    ):
+        with pytest.raises(Exception, match="Erro ao deletar empréstimo no banco"):
+            remover_emprestimo(1)
