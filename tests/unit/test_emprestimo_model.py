@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import MagicMock, patch
 
 from emprestimo_service.models.emprestimo_model import (
@@ -171,3 +172,85 @@ def test_get_emprestimo_by_id_none():
         result = get_emprestimo_by_id(999)
 
     assert result is None
+
+
+# Testes de falha
+ 
+def test_get_all_emprestimos_falha_na_conexao():
+
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        side_effect=Exception("Não foi possível conectar ao banco")
+    ):
+        with pytest.raises(Exception, match="Não foi possível conectar ao banco"):
+            get_all_emprestimos()
+ 
+ 
+def test_get_all_emprestimos_falha_no_execute():
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.execute.side_effect = Exception("Tabela 'cliente' não encontrada no JOIN")
+    mock_conn.cursor.return_value = mock_cursor
+ 
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        return_value=mock_conn
+    ):
+        with pytest.raises(Exception, match="Tabela 'cliente' não encontrada no JOIN"):
+            get_all_emprestimos()
+
+ 
+def test_get_emprestimo_by_id_falha_na_conexao():
+
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        side_effect=Exception("conexões esgotado")
+    ):
+        with pytest.raises(Exception, match="conexões esgotado"):
+            get_emprestimo_by_id(1)
+
+ 
+def test_get_emprestimo_by_id_falha_no_execute():
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.execute.side_effect = Exception("Tipo de dado inválido para id")
+    mock_conn.cursor.return_value = mock_cursor
+ 
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        return_value=mock_conn
+    ):
+        with pytest.raises(Exception, match="Tipo de dado inválido para id"):
+            get_emprestimo_by_id(1)
+ 
+ 
+def test_create_emprestimo_falha_na_conexao():
+
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        side_effect=Exception("Banco de dados indisponível")
+    ):
+        with pytest.raises(Exception, match="Banco de dados indisponível"):
+            create_emprestimo(1, 1, "2026-06-01")
+ 
+
+def test_finalizar_emprestimo_falha_na_conexao():
+
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        side_effect=Exception("Banco fora do ar")
+    ):
+        with pytest.raises(Exception, match="Banco fora do ar"):
+            finalizar_emprestimo(1, "2026-06-15") 
+ 
+ 
+def test_delete_emprestimo_falha_na_conexao():
+
+    with patch(
+        "emprestimo_service.models.emprestimo_model.get_connection",
+        side_effect=Exception("Banco fora do ar")
+    ):
+        with pytest.raises(Exception, match="Banco fora do ar"):
+            delete_emprestimo(2)
