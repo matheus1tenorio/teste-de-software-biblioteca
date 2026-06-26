@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import MagicMock, patch
 
 from livro_service.models.livro_model import (
@@ -208,3 +209,111 @@ def test_get_livro_by_id_none():
         result = get_livro_by_id(999)
 
     assert result is None
+
+
+# Testes de falha 
+
+def test_get_all_livros_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Não foi possível conectar ao banco")
+    ):
+        with pytest.raises(Exception, match="Não foi possível conectar ao banco"):
+            get_all_livros()
+ 
+ 
+def test_get_all_livros_falha_no_execute():
+ 
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.execute.side_effect = Exception("Tabela 'livro' não encontrada")
+    mock_conn.cursor.return_value = mock_cursor
+ 
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        return_value=mock_conn
+    ):
+        with pytest.raises(Exception, match="Tabela 'livro' não encontrada"):
+            get_all_livros()
+ 
+ 
+def test_get_livro_by_id_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Não foi possível obter uma conexão com o banco de dados")
+    ):
+        with pytest.raises(Exception, match="Não foi possível obter uma conexão com o banco de dados"):
+            get_livro_by_id(1)
+ 
+ 
+def test_get_livro_by_id_falha_no_execute():
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.execute.side_effect = Exception("Tipo de dado inválido para id")
+    mock_conn.cursor.return_value = mock_cursor
+ 
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        return_value=mock_conn
+    ):
+        with pytest.raises(Exception, match="Tipo de dado inválido para id"):
+            get_livro_by_id(1)
+ 
+ 
+def test_create_livro_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Banco de dados indisponível")
+    ):
+        with pytest.raises(Exception, match="Banco de dados indisponível"):
+            create_livro("O Hobbit", "J.R.R. Tolkien", 1937)
+ 
+ 
+def test_update_livro_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Não foi possível obter uma conexão com o banco de dados")
+    ):
+        with pytest.raises(Exception, match="Não foi possível obter uma conexão com o banco de dados"):
+            update_livro(1, "1984", "George Orwell", 1949)
+ 
+ 
+def test_update_livro_falha_no_execute():
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_cursor.execute.side_effect = Exception("Coluna 'ano' não existe")
+    mock_conn.cursor.return_value = mock_cursor
+ 
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        return_value=mock_conn
+    ):
+        with pytest.raises(Exception, match="Coluna 'ano' não existe"):
+            update_livro(1, "1984", "George Orwell", 1949)
+ 
+ 
+def test_update_disponibilidade_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Banco fora do ar")
+    ):
+        with pytest.raises(Exception, match="Banco fora do ar"):
+            update_disponibilidade(1, False)
+ 
+  
+def test_delete_livro_falha_na_conexao():
+
+    with patch(
+        "livro_service.models.livro_model.get_connection",
+        side_effect=Exception("Banco fora do ar")
+    ):
+        with pytest.raises(Exception, match="Banco fora do ar"):
+            delete_livro(2)
+ 
