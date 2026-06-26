@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Livros - BiblioTech</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">📚 BiblioTech</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="livros.html">Livros</a></li>
+                <li><a href="usuarios.html">Usuários</a></li>
+                <li><a href="emprestimos.html">Empréstimos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Gerenciamento de Acervo (Livros)</h2>
+        <section id="form-container">
+            <h3 id="form-titulo">Cadastrar Novo Livro</h3>
+            <form id="livro-form">
+                <input type="text"   name="titulo" id="titulo" placeholder="Título" required>
+                <input type="text"   name="autor"  id="autor"  placeholder="Autor"  required>
+                <input type="number" name="ano"    id="ano"    placeholder="Ano">
+                <button type="submit" id="btn-salvar">Salvar Livro</button>
+                <button type="button" id="btn-cancelar"
+                        onclick="cancelarEdicao()"
+                        style="display:none; background-color:#95a5a6;">
+                    Cancelar
+                </button>
+            </form>
+        </section>
+        <section id="lista-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Ano</th>
+                        <th>Disponível</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-livros-body">
+                    <tr><td colspan="5" style="text-align:center">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 - All rights reserved</p>
+    </footer>
+    <script src="./js/livros.js"></script>
+</body>
+</html>

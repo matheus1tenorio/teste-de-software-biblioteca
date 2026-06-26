@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empréstimos - BiblioTech</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">📚 BiblioTech</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="livros.html">Livros</a></li>
+                <li><a href="usuarios.html">Usuários</a></li>
+                <li><a href="emprestimos.html">Empréstimos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Controle de Empréstimos</h2>
+        <section id="form-container">
+            <h3>Registrar Saída de Livro</h3>
+            <form id="emprestimo-form" class="form-row">
+                <div class="form-group">
+                    <label for="select-usuario">Usuário:</label>
+                    <select name="usuario_id" id="select-usuario" required>
+                        <option value="">Selecione o Usuário</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="select-livro">Livro:</label>
+                    <select name="livro_id" id="select-livro" required>
+                        <option value="">Selecione o Livro</option>
+                    </select>
+                </div>
+                <div class="form-group-date">
+                    <label for="data-emprestimo">Data de Saída:</label>
+                    <input type="date" name="data_emprestimo" id="data-emprestimo" required>
+                </div>
+                <button type="submit" class="btn-submit-row">Registrar Empréstimo</button>
+            </form>
+        </section>
+        <section id="lista-container">
+            <h3>Todos os Empréstimos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Livro</th>
+                        <th>Data Saída</th>
+                        <th>Data Devolução</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-emprestimos-body">
+                    <tr><td colspan="6" style="text-align:center">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 - All rights reserved</p>
+    </footer>
+    <script src="./js/emprestimos.js"></script>
+</body>
+</html>
