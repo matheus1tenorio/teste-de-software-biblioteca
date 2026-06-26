@@ -1,174 +1,104 @@
-# 📚 Sistema Web de Biblioteca  
-### Arquitetura de Microsserviços + MVC + Docker
+# 📚 Teste de Software — Sistema de Biblioteca
+
+Sistema de gerenciamento de biblioteca com arquitetura de microsserviços, cobrindo **Cliente**, **Livro** e **Empréstimo**. Este documento descreve como instalar as dependências e executar os testes unitários e de integração do projeto.
 
 ---
 
-## 📖 Visão Geral do Projeto
-Esse projeto foi desenvolvido para a disciplina de Desenvolvimento Web 2 por Matheus Tenório e Filipe de Oliveira.
+## 🛠️ Instalação das Dependências
 
-O **Sistema Web de Biblioteca** é uma aplicação desenvolvida com fins acadêmicos para aplicar conceitos modernos de **Engenharia de Software**, **Arquitetura de Sistemas** e **Desenvolvimento Web**. O sistema foi construído utilizando arquitetura baseada em microsserviços, onde cada domínio funciona de forma independente e se comunica através de **APIs REST**.
+Execute os comandos abaixo para instalar as bibliotecas necessárias:
 
-O sistema permite o gerenciamento completo de uma biblioteca, incluindo:
-
-- 👤 Cadastro de clientes  
-- 📘 Gerenciamento de livros  
-- 🔄 Controle de empréstimos e devoluções  
-
-Alem disso, o sistema inclui 3 entidades **(Clientes, Livros, Empréstimos)** sendo possível realizar operações CRUD **(CREATE - READ - UPDATE - DELETE)** em cada uma das entidades.
-
-Este sistema foi feito para ser executado em sua IDE de preferência ou na Nuvem através do Cloud9 (AWS).
+```bash
+python -m pip install flask
+python -m pip install pytest
+python -m pip install mysql-connector-python
+```
 
 ---
 
-## ⚙️ Funcionalidades do Sistema
+## 🧪 Testes Unitários
 
-### 👤 Clientes
-- Cadastrar cliente
-- Listar clientes
-- Editar dados
-- Remover cliente
+Os testes unitários validam cada camada da aplicação de forma isolada (model, controller e routes), utilizando mocks para simular dependências externas como banco de dados e serviços HTTP.
 
-### 📘 Livros
-- Cadastrar livros
-- Consultar acervo
-- Alterar disponibilidade
-- Remover livros
+### Cliente
 
-### 🔄 Empréstimos
-- Registrar empréstimos
-- Associar cliente a livro
-- Registrar devoluções
-- Excluir empréstimos
+```bash
+python -m pytest tests/unit/test_cliente_controller.py -v
+python -m pytest tests/unit/test_cliente_model.py -v
+python -m pytest tests/unit/test_cliente_routes.py -v
+```
+
+### Livro
+
+```bash
+python -m pytest tests/unit/test_livro_controller.py -v
+python -m pytest tests/unit/test_livro_model.py -v
+python -m pytest tests/unit/test_livro_routes.py -v
+```
+
+### Empréstimo
+
+```bash
+python -m pytest tests/unit/test_emprestimo_controller.py -v
+python -m pytest tests/unit/test_emprestimo_model.py -v
+python -m pytest tests/unit/test_emprestimo_routes.py -v
+```
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## 🔗 Testes de Integração
 
-### Backend:
-- Python
-- Flask
-- API REST
-- Arquitetura MVC
+Os testes de integração realizam chamadas HTTP reais aos serviços. Certifique-se de que os três microsserviços estejam rodando antes de executá-los:
 
-### Frontend:
-- HTML5
-- CSS3
-- JavaScript
-- Nginx
+| Serviço    | Porta padrão |
+|------------|-------------|
+| Cliente    | 5001        |
+| Livro      | 5002        |
+| Empréstimo | 5003        |
 
-### Banco de Dados:
-- MySQL
+### Por serviço
 
-### DevOps & Infraestrutura:
-- Docker
-- Docker Compose
-- Nginx
+```bash
+python -m pytest tests/integration/test_cliente_integration.py -v
+python -m pytest tests/integration/test_livro_integration.py -v
+python -m pytest tests/integration/test_emprestimo_integration.py -v
+```
 
-### Arquitetura:
-- Microsserviços
-- MVC
-- Comunicação HTTP entre serviços
+### Fluxo completo (End-to-End)
+
+Valida o ciclo completo: criação de cliente → cadastro de livro → empréstimo → devolução.
+
+```bash
+python -m pytest tests/integration/test_fluxo_completo.py -v
+```
 
 ---
 
-## 🏗 Arquitetura do Sistema
+## ▶️ Executar Todos os Testes de Uma Vez
 
-O sistema foi dividido em múltiplos serviços independentes (sendo os 3 principais: Cliente - Livro - Empréstimo):
-
-### 🔹 Frontend
-Interface visual responsável pela interação com o usuário e envio das requisições para as APIs.
-
-### 🔹 Cliente Service
-Gerencia operações relacionadas aos usuários da biblioteca.
-
-### 🔹 Livro Service
-Responsável pelo controle do acervo e disponibilidade dos livros.
-
-### 🔹 Emprestimo Service
-Controla empréstimos e devoluções, integrando clientes e livros.
-
-### 🔹 MySQL Database
-Armazena permanentemente os dados do sistema.
-
-### 🔹 Nginx
-Funciona como **API Gateway**, centralizando o acesso aos microsserviços.
-
-
-Cada microsserviço possui:
-
-- Aplicação Flask independente  
-- Estrutura MVC própria  
-- Dockerfile individual  
-- Dependências isoladas  
+```bash
+python -m pytest tests/ -v
+```
 
 ---
 
-## 🚀 Processo de Desenvolvimento
+## 🗂️ Estrutura de Testes
 
-O projeto foi desenvolvido seguindo etapas progressivas:
-
-1. Modelagem do domínio da biblioteca  
-2. Definição das entidades principais  
-3. Criação do banco MySQL  
-4. Desenvolvimento do primeiro microsserviço  
-5. Implementação do padrão MVC  
-6. Replicação da arquitetura para os demais serviços  
-7. Implementação das APIs REST  
-8. Desenvolvimento do frontend  
-9. Integração frontend ↔ backend  
-10. Containerização com Docker  
-11. Ultilização do Docker Compose para dependências  
-12. Configuração de rede entre containers  
-13. Implementação do Nginx como gateway  
-14. Testes de comunicação entre serviços  
-15. Deploy em ambiente Cloud9/AWS  
-
----
-
-# ▶️ Como Executar o Sistema
-
-Este guia explica **passo a passo** como rodar o sistema completo da Biblioteca utilizando **Docker**, funcionando em qualquer computador sem necessidade de instalar dependências manualmente.
-
----
-
-##  Pré-requisitos:
-
-Antes de iniciar, é necessário possuir instalado em sua máquina ou ambiente:
-
-✅ Docker  
-✅ Docker Compose  
-✅ Git (opcional, para clonar o projeto)
-
----
-
-## Executando:
-
-**Clonar o Repositório**
 ```
-git clone https://github.com/matheus1tenorio/sistema-web-biblioteca.git
-```
-
-**Acessar a Pasta Certa**
-```
-cd sistema-web-biblioteca
-```
-
-**Subir o Sistema**
-```
-docker compose up --build
-```
-
-**Fechar o Sistema**
-```
-docker compose down
-```
-
-**Verificar Containers (Opcional)**
-```
-docker ps
-```
-
-**Acessar o Sistema**
-```
-http://localhost:8080/index.html
+tests/
+├── unit/
+│   ├── test_cliente_controller.py
+│   ├── test_cliente_model.py
+│   ├── test_cliente_routes.py
+│   ├── test_livro_controller.py
+│   ├── test_livro_model.py
+│   ├── test_livro_routes.py
+│   ├── test_emprestimo_controller.py
+│   ├── test_emprestimo_model.py
+│   └── test_emprestimo_routes.py
+└── integration/
+    ├── test_cliente_integration.py
+    ├── test_livro_integration.py
+    ├── test_emprestimo_integration.py
+    └── test_fluxo_completo.py
 ```
