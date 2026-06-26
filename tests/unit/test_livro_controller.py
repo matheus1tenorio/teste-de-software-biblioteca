@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch
 
 from livro_service.controllers.livro_controller import (
@@ -182,3 +183,106 @@ def test_remover_livro_nao_encontrado():
         {"erro": "Livro não encontrado"},
         404
     )
+
+# Testes de falha
+ 
+def test_listar_livros_falha_no_model():
+    with patch(
+        "livro_service.controllers.livro_controller.get_all_livros",
+        side_effect=Exception("Erro de conexão com o banco")
+    ):
+        with pytest.raises(Exception, match="Erro de conexão com o banco"):
+            listar_livros()
+
+ 
+def test_buscar_livro_falha_no_model():
+    with patch(
+        "livro_service.controllers.livro_controller.get_livro_by_id",
+        side_effect=Exception("Tempo limite excedido ao buscar o livro no banco de dados")
+    ):
+        with pytest.raises(Exception, match="Tempo limite excedido ao buscar o livro no banco de dados"):
+            buscar_livro(1)
+ 
+ 
+def test_criar_livro_falha_no_model():
+
+    dados = {
+        "titulo": "Duna",
+        "autor": "Frank Herbert",
+        "ano": 1965
+    }
+ 
+    with patch(
+        "livro_service.controllers.livro_controller.create_livro",
+        side_effect=Exception("Já existe um livro cadastrado com este título")
+    ):
+        with pytest.raises(Exception, match="Já existe um livro cadastrado com este título"):
+            criar_livro(dados)
+ 
+ 
+def test_editar_livro_falha_ao_buscar():
+
+    dados = {
+        "titulo": "O Senhor dos Anéis",
+        "autor": "J.R.R. Tolkien",
+        "ano": 1954
+    }
+ 
+    with patch(
+        "livro_service.controllers.livro_controller.get_livro_by_id",
+        side_effect=Exception("Não foi possível obter uma conexão com o banco de dados")
+    ):
+        with pytest.raises(Exception, match="Não foi possível obter uma conexão com o banco de dados"):
+            editar_livro(1, dados)
+ 
+ 
+def test_editar_livro_falha_no_update():
+
+    dados = {
+        "titulo": "O Senhor dos Anéis",
+        "autor": "J.R.R. Tolkien",
+        "ano": 1954
+    }
+ 
+    with patch(
+        "livro_service.controllers.livro_controller.get_livro_by_id",
+        return_value={"id": 1}
+    ), patch(
+        "livro_service.controllers.livro_controller.update_livro",
+        side_effect=Exception("Conflito de acesso ao banco de dados durante a atualização do registro")
+    ):
+        with pytest.raises(Exception, match="Conflito de acesso ao banco de dados durante a atualização do registro"):
+            editar_livro(1, dados)
+ 
+ 
+def test_alterar_status_falha_no_model():
+
+    with patch(
+        "livro_service.controllers.livro_controller.update_disponibilidade",
+        side_effect=Exception("Erro ao atualizar disponibilidade")
+    ):
+        with pytest.raises(Exception, match="Erro ao atualizar disponibilidade"):
+            alterar_status(1, False)
+ 
+ 
+def test_remover_livro_falha_ao_buscar():
+
+    with patch(
+        "livro_service.controllers.livro_controller.get_livro_by_id",
+        side_effect=Exception("Banco inacessível")
+    ):
+        with pytest.raises(Exception, match="Banco inacessível"):
+            remover_livro(1)
+ 
+ 
+def test_remover_livro_falha_no_delete():
+
+    with patch(
+        "livro_service.controllers.livro_controller.get_livro_by_id",
+        return_value={"id": 1}
+    ), patch(
+        "livro_service.controllers.livro_controller.delete_livro",
+        side_effect=Exception("Não foi possível remover o registro porque ele está sendo utilizado por outros dados")
+    ):
+        with pytest.raises(Exception, match="Não foi possível remover o registro porque ele está sendo utilizado por outros dados"):
+            remover_livro(1)
