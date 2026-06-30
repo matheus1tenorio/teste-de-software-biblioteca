@@ -2,6 +2,7 @@
 
 Sistema de gerenciamento de biblioteca com arquitetura de microsserviços, cobrindo **Cliente**, **Livro** e **Empréstimo**. Este documento descreve como instalar as dependências e executar os testes unitários e de integração do projeto.
 
+Este projeto foi realiado por Filipe de Oliveira e Matheus Tenório para a disciplina de Testes de Software do curso de ADS - IFPE Campus Paulista
 ---
 
 ## 🛠️ Instalação das Dependências
