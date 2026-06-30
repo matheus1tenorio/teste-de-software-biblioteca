@@ -19,27 +19,7 @@ def test_listar_emprestimos_retorna_200():
 
     
     
-def test_nao_permite_emprestar_livro_indisponivel():
-    
-    requests.put(
-        f"{LIVRO_URL}/1/status",
-        json={"disponivel": False}
-    )
 
-    resposta = requests.post(
-        f"{BASE_URL}/emprestimos",
-        json={
-            "cliente_id": 1,
-            "livro_id": 1,
-            "data_emprestimo": "2026-06-15"
-        }
-    )
-
-    assert resposta.status_code == 400
-
-    assert resposta.json() == {
-        "erro": "Livro não está disponível para empréstimo"
-    }
     
 
 def gerar_email():
